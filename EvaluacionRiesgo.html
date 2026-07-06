@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Evaluación de Riesgo</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body { background: #f5f5e9; min-height: 100vh; color: #123; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 270px; background: linear-gradient(180deg, #004b24, #009144); color: white; padding: 25px 20px; }
+    .logo-box { width: 190px; height: 70px; border: 2px dashed white; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 35px; font-weight: bold; }
+    .menu-title { font-size: 13px; opacity: 0.8; margin-bottom: 15px; letter-spacing: 1px; }
+    .menu-item { padding: 14px 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; font-size: 16px; }
+    .menu-item.active, .menu-item:hover { background: rgba(255,255,255,0.18); border-left: 5px solid #ffc400; }
+    .content { flex: 1; padding: 25px 35px; }
+    .topbar { height: 75px; background: white; border-bottom: 5px solid #ffc400; box-shadow: 0 3px 12px rgba(0,0,0,0.12); padding: 0 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .topbar h1 { color: #006b35; font-size: 28px; }
+    .user { color: #006b35; font-weight: bold; }
+    .panel { background: white; border-radius: 18px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.12); margin-bottom: 25px; }
+    .section-title { color: #006b35; font-size: 22px; margin-bottom: 18px; border-left: 6px solid #ffc400; padding-left: 12px; }
+    .client-box { background: #eef7ef; border-left: 6px solid #00a84f; padding: 18px; border-radius: 14px; margin-bottom: 25px; color: #006b35; font-weight: bold; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-bottom: 25px; }
+    .card { background: white; padding: 25px; border-radius: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-left: 7px solid #00a84f; }
+    .card.orange { border-left-color: #ff9800; }
+    .card.yellow { border-left-color: #ffc400; }
+    .card.red { border-left-color: #d93025; }
+    .card h3 { font-size: 15px; color: #555; margin-bottom: 12px; }
+    .card .number { font-size: 34px; font-weight: bold; color: #006b35; }
+    .card p { margin-top: 8px; color: #777; font-size: 14px; }
+    .bureau-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .bureau-item { background: #fafaf0; border-left: 6px solid #00a84f; padding: 18px; border-radius: 14px; }
+    .bureau-item strong { display: block; color: #006b35; margin-bottom: 6px; }
+    .bureau-item span { color: #555; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; }
+    .history-list { display: flex; flex-direction: column; gap: 15px; }
+    .history-item { background: #fafaf0; padding: 16px; border-radius: 14px; border-left: 6px solid #00a84f; }
+    .history-item.warning { border-left-color: #ff9800; }
+    .history-item.danger { border-left-color: #d93025; }
+    .history-item strong { display: block; color: #006b35; margin-bottom: 5px; }
+    .score-box { text-align: center; padding: 20px; }
+    .circle { width: 190px; height: 190px; border-radius: 50%; margin: 0 auto 20px; background: conic-gradient(#00a84f 0deg 260deg, #e5e5e5 260deg 360deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+    .circle-inner { width: 135px; height: 135px; border-radius: 50%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #006b35; font-weight: bold; }
+    .circle-inner span { font-size: 42px; }
+    .risk-badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+    .risk { padding: 18px; border-radius: 14px; text-align: center; font-weight: bold; border: 2px solid transparent; }
+    .risk.low { background: #dff7e8; color: #00783f; border-color: #00a84f; }
+    .risk.medium { background: #fff0d6; color: #ff9800; }
+    .risk.high { background: #ffe1df; color: #d93025; }
+    .result-box { background: #eef7ef; border-radius: 18px; padding: 22px; border-left: 7px solid #00a84f; margin-top: 20px; }
+    .result-box h3 { color: #006b35; margin-bottom: 10px; }
+    .result-box p { color: #555; line-height: 1.5; }
+    .actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
+    .btn { border: none; padding: 14px 24px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
+    .btn-save { background: #00a84f; color: white; }
+    .btn-yellow { background: #ffc400; color: #004b24; }
+    .btn-gray { background: #e5e5e5; color: #333; }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="top-logo">
+  <img src="coop.png" alt="Logo Coop" style="max-width:100%; max-height:100%;">
+</div>
+      <div class="menu-title">MENÚ PRINCIPAL</div>
+      <div class="menu-item">📊 Dashboard</div>
+      <div class="menu-item">👥 Clientes</div>
+      <div class="menu-item">📝 Solicitudes</div>
+      <div class="menu-item">📁 Documentos</div>
+      <div class="menu-item active">⚖ Evaluación de riesgo</div>
+      <div class="menu-item">📄 Reportes</div>
+      <div class="menu-item">⚙ Administración</div>
+      <div class="menu-item">🚪 Cerrar sesión</div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <h1>Evaluación de Riesgo Crediticio</h1>
+        <div class="user">👤 Analista de Crédito</div>
+      </div>
+
+      <section class="panel">
+        <h2 class="section-title">Información de la solicitud</h2>
+        <div class="client-box">
+          Solicitud: SOL-2026-001 | Cliente: Juan Pérez | Tipo de crédito: Microcrédito | Monto solicitado: $5.000
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Información del Buró de Crédito</h2>
+
+        <div class="bureau-grid">
+          <div class="bureau-item">
+            <strong>Buró consultado</strong>
+            <span>Sí</span>
+          </div>
+
+          <div class="bureau-item">
+            <strong>Fecha de consulta</strong>
+            <span>15/04/2026</span>
+          </div>
+
+          <div class="bureau-item">
+            <strong>Score externo</strong>
+            <span>720</span>
+          </div>
+
+          <div class="bureau-item">
+            <strong>Estado de consulta</strong>
+            <span>Consulta exitosa</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Historial crediticio</h3>
+          <div class="number">Bueno</div>
+          <p>Pagos cumplidos en registros anteriores.</p>
+        </div>
+
+        <div class="card orange">
+          <h3>Nivel de endeudamiento</h3>
+          <div class="number">34%</div>
+          <p>Dentro del rango permitido.</p>
+        </div>
+
+        <div class="card yellow">
+          <h3>Score crediticio</h3>
+          <div class="number">720</div>
+          <p>Puntaje calculado automáticamente.</p>
+        </div>
+
+        <div class="card">
+          <h3>Capacidad de pago</h3>
+          <div class="number">$280</div>
+          <p>Capacidad mensual estimada.</p>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2 class="section-title">Historial crediticio</h2>
+
+          <div class="history-list">
+            <div class="history-item">
+              <strong>Crédito anterior</strong>
+              Pagado correctamente sin retrasos importantes.
+            </div>
+
+            <div class="history-item warning">
+              <strong>Obligaciones activas</strong>
+              Mantiene una obligación financiera vigente.
+            </div>
+
+            <div class="history-item">
+              <strong>Comportamiento de pago</strong>
+              Historial favorable según registros consultados.
+            </div>
+
+            <div class="history-item danger">
+              <strong>Alertas</strong>
+              No se registran alertas críticas recientes.
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="section-title">Resultado de evaluación</h2>
+
+          <div class="score-box">
+            <div class="circle">
+              <div class="circle-inner">
+                <span>720</span>
+                Score
+              </div>
+            </div>
+
+            <div class="risk-badges">
+              <div class="risk low">Bajo</div>
+              <div class="risk medium">Medio</div>
+              <div class="risk high">Alto</div>
+            </div>
+
+            <div class="result-box">
+              <h3>Clasificación sugerida: Riesgo Bajo</h3>
+              <p>
+                El solicitante presenta un historial crediticio favorable,
+                nivel de endeudamiento aceptable y capacidad de pago suficiente.
+                Se recomienda continuar con la revisión para aprobación.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Acciones de evaluación</h2>
+
+        <div class="actions">
+          <button class="btn btn-gray">Cancelar</button>
+          <button class="btn btn-yellow">Recalcular score</button>
+          <button class="btn btn-save">💾 Guardar evaluación</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

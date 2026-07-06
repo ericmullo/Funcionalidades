@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carga de Documentos</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5e9;
+      min-height: 100vh;
+      color: #123;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 270px;
+      background: linear-gradient(180deg, #004b24, #009144);
+      color: white;
+      padding: 25px 20px;
+    }
+
+    .logo-box {
+      width: 190px;
+      height: 70px;
+      border: 2px dashed white;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 35px;
+      font-weight: bold;
+    }
+
+    .menu-title {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .menu-item {
+      padding: 14px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .menu-item.active,
+    .menu-item:hover {
+      background: rgba(255,255,255,0.18);
+      border-left: 5px solid #ffc400;
+    }
+
+    .content {
+      flex: 1;
+      padding: 25px 35px;
+    }
+
+    .topbar {
+      height: 75px;
+      background: white;
+      border-bottom: 5px solid #ffc400;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+      padding: 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      color: #006b35;
+      font-size: 28px;
+    }
+
+    .user {
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      color: #006b35;
+      font-size: 22px;
+      margin-bottom: 18px;
+      border-left: 6px solid #ffc400;
+      padding-left: 12px;
+    }
+
+    .info-box {
+      background: #eef7ef;
+      border-left: 6px solid #00a84f;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-bottom: 25px;
+    }
+
+    .upload-card {
+      border: 2px dashed #00a84f;
+      background: #fafaf0;
+      border-radius: 18px;
+      padding: 25px;
+      text-align: center;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    .upload-card:hover {
+      background: #eef7ef;
+      transform: translateY(-3px);
+    }
+
+    .upload-icon {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+
+    .upload-card h3 {
+      color: #006b35;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .upload-card p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .upload-card input {
+      display: none;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      background: #00a84f;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .upload-btn:hover {
+      background: #008f43;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+    }
+
+    .table th,
+    .table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 15px;
+    }
+
+    .table th {
+      background: #f3f8ef;
+      color: #006b35;
+    }
+
+    .table tr:hover {
+      background: #fafaf0;
+    }
+
+    .status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .uploaded {
+      background: #dff7e8;
+      color: #00783f;
+    }
+
+    .pending {
+      background: #fff0d6;
+      color: #ff9800;
+    }
+
+    .btn-small {
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .btn-view {
+      background: #eef7ef;
+      color: #006b35;
+    }
+
+    .btn-delete {
+      background: #ffe1df;
+      color: #d93025;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-save {
+      background: #00a84f;
+      color: white;
+    }
+
+    .btn-cancel {
+      background: #e5e5e5;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="top-logo">
+  <img src="coop.png" alt="Logo Coop" style="max-width:100%; max-height:100%;">
+</div>
+
+      <div class="menu-title">MENÚ PRINCIPAL</div>
+
+      <div class="menu-item">📊 Dashboard</div>
+      <div class="menu-item">👥 Clientes</div>
+      <div class="menu-item">📝 Solicitudes</div>
+      <div class="menu-item active">📁 Documentos</div>
+      <div class="menu-item">⚖ Evaluación de riesgo</div>
+      <div class="menu-item">📄 Reportes</div>
+      <div class="menu-item">⚙ Administración</div>
+      <div class="menu-item">🚪 Cerrar sesión</div>
+    </aside>
+
+    <main class="content">
+
+      <div class="topbar">
+        <h1>Carga de Documentos</h1>
+        <div class="user">👤 Analista de Crédito</div>
+      </div>
+
+      <section class="panel">
+        <h2 class="section-title">Documentos del solicitante</h2>
+
+        <div class="info-box">
+          Solicitud: SOL-2026-001 | Cliente: Juan Pérez | Estado: Documentación pendiente
+        </div>
+
+        <div class="upload-grid">
+
+          <div class="upload-card">
+            <div class="upload-icon">📄</div>
+            <h3>Subir PDF</h3>
+            <p>Adjuntar documentos generales en formato PDF.</p>
+            <label class="upload-btn">
+              Seleccionar PDF
+              <input type="file" accept=".pdf">
+            </label>
+          </div>
+
+          <div class="upload-card">
+            <div class="upload-icon">🪪</div>
+            <h3>Subir cédula</h3>
+            <p>Adjuntar imagen o PDF de la cédula del cliente.</p>
+            <label class="upload-btn">
+              Seleccionar cédula
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+          </div>
+
+          <div class="upload-card">
+            <div class="upload-icon">💼</div>
+            <h3>Certificado laboral</h3>
+            <p>Adjuntar certificado laboral o respaldo de ingresos.</p>
+            <label class="upload-btn">
+              Seleccionar archivo
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Lista de documentos cargados</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Tipo</th>
+              <th>Formato</th>
+              <th>Fecha de carga</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Cédula frontal</td>
+              <td>Identificación</td>
+              <td>JPG</td>
+              <td>15/04/2026</td>
+              <td><span class="status uploaded">Cargado</span></td>
+              <td>
+                <button class="btn-small btn-view">Ver</button>
+                <button class="btn-small btn-delete">Eliminar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Certificado laboral</td>
+              <td>Ingresos</td>
+              <td>PDF</td>
+              <td>15/04/2026</td>
+              <td><span class="status uploaded">Cargado</span></td>
+              <td>
+                <button class="btn-small btn-view">Ver</button>
+                <button class="btn-small btn-delete">Eliminar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Rol de pagos</td>
+              <td>Financiero</td>
+              <td>PDF</td>
+              <td>--</td>
+              <td><span class="status pending">Pendiente</span></td>
+              <td>
+                <button class="btn-small btn-view">Subir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <button class="btn btn-cancel">Cancelar</button>
+          <button class="btn btn-save">💾 Guardar documentos</button>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

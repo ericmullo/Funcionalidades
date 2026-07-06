@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reportes y Dashboard Gerencial</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5e9;
+      min-height: 100vh;
+      color: #123;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 270px;
+      background: linear-gradient(180deg, #004b24, #009144);
+      color: white;
+      padding: 25px 20px;
+    }
+
+    .logo-box {
+      width: 190px;
+      height: 70px;
+      border: 2px dashed white;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 35px;
+      font-weight: bold;
+    }
+
+    .menu-title {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .menu-item {
+      padding: 14px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .menu-item.active,
+    .menu-item:hover {
+      background: rgba(255,255,255,0.18);
+      border-left: 5px solid #ffc400;
+    }
+
+    .content {
+      flex: 1;
+      padding: 25px 35px;
+    }
+
+    .topbar {
+      height: 75px;
+      background: white;
+      border-bottom: 5px solid #ffc400;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+      padding: 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      color: #006b35;
+      font-size: 28px;
+    }
+
+    .user {
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      color: #006b35;
+      font-size: 22px;
+      margin-bottom: 18px;
+      border-left: 6px solid #ffc400;
+      padding-left: 12px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      align-items: end;
+    }
+
+    .form-group label {
+      display: block;
+      color: #006b35;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      height: 45px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+
+    .btn {
+      border: none;
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-green {
+      background: #00a84f;
+      color: white;
+    }
+
+    .btn-yellow {
+      background: #ffc400;
+      color: #004b24;
+    }
+
+    .btn-gray {
+      background: #e5e5e5;
+      color: #333;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      border-left: 7px solid #00a84f;
+    }
+
+    .card.red {
+      border-left-color: #d93025;
+    }
+
+    .card.orange {
+      border-left-color: #ff9800;
+    }
+
+    .card.yellow {
+      border-left-color: #ffc400;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .card .number {
+      font-size: 34px;
+      font-weight: bold;
+      color: #006b35;
+    }
+
+    .card p {
+      color: #777;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
+
+    .chart-box {
+      height: 300px;
+      border-left: 2px solid #ddd;
+      border-bottom: 2px solid #ddd;
+      display: flex;
+      align-items: end;
+      gap: 30px;
+      padding: 25px;
+      margin-top: 15px;
+    }
+
+    .bar {
+      width: 65px;
+      background: linear-gradient(180deg, #00a84f, #006b35);
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+
+    .bar.red {
+      background: linear-gradient(180deg, #ff6b5f, #d93025);
+    }
+
+    .bar.orange {
+      background: linear-gradient(180deg, #ffb347, #ff9800);
+    }
+
+    .bar span {
+      position: absolute;
+      bottom: -30px;
+      width: 100%;
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .bar small {
+      position: absolute;
+      top: -25px;
+      width: 100%;
+      text-align: center;
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .report-item {
+      background: #fafaf0;
+      border-left: 6px solid #00a84f;
+      padding: 16px;
+      border-radius: 14px;
+    }
+
+    .report-item strong {
+      display: block;
+      color: #006b35;
+      margin-bottom: 5px;
+    }
+
+    .report-item p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 15px;
+    }
+
+    .table th {
+      background: #f3f8ef;
+      color: #006b35;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .alto {
+      background: #ffe1df;
+      color: #d93025;
+    }
+
+    .medio {
+      background: #fff0d6;
+      color: #ff9800;
+    }
+
+    .bajo {
+      background: #dff7e8;
+      color: #00783f;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="top-logo">
+  <img src="coop.png" alt="Logo Coop" style="max-width:100%; max-height:100%;">
+</div>
+
+      <div class="menu-title">MENÚ PRINCIPAL</div>
+
+      <div class="menu-item">📊 Dashboard</div>
+      <div class="menu-item">👥 Clientes</div>
+      <div class="menu-item">📝 Solicitudes</div>
+      <div class="menu-item">📁 Documentos</div>
+      <div class="menu-item">⚖ Evaluación de riesgo</div>
+      <div class="menu-item active">📄 Reportes</div>
+      <div class="menu-item">⚙ Administración</div>
+      <div class="menu-item">🚪 Cerrar sesión</div>
+    </aside>
+
+    <main class="content">
+
+      <div class="topbar">
+        <h1>Reportes y Dashboard Gerencial</h1>
+        <div class="user">👤 Gerencia</div>
+      </div>
+
+      <section class="panel">
+        <h2 class="section-title">Filtros de consulta</h2>
+
+        <div class="filters">
+          <div class="form-group">
+            <label>Fecha inicio</label>
+            <input type="date">
+          </div>
+
+          <div class="form-group">
+            <label>Fecha fin</label>
+            <input type="date">
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de crédito</label>
+            <select>
+              <option>Todos</option>
+              <option>Consumo</option>
+              <option>Microcrédito</option>
+              <option>Vivienda</option>
+              <option>Comercial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nivel de riesgo</label>
+            <select>
+              <option>Todos</option>
+              <option>Bajo</option>
+              <option>Medio</option>
+              <option>Alto</option>
+            </select>
+          </div>
+
+          <button class="btn btn-green">🔎 Aplicar filtros</button>
+        </div>
+
+        <div class="export-buttons">
+          <button class="btn btn-yellow">📄 Exportar PDF</button>
+          <button class="btn btn-green">📊 Exportar Excel</button>
+          <button class="btn btn-gray">Limpiar filtros</button>
+        </div>
+      </section>
+
+      <section class="summary-cards">
+        <div class="card">
+          <h3>Solicitudes evaluadas</h3>
+          <div class="number">128</div>
+          <p>Total del periodo seleccionado.</p>
+        </div>
+
+        <div class="card red">
+          <h3>Morosidad estimada</h3>
+          <div class="number">10.8%</div>
+          <p>Indicador de riesgo institucional.</p>
+        </div>
+
+        <div class="card orange">
+          <h3>Riesgo medio</h3>
+          <div class="number">51</div>
+          <p>Solicitudes con revisión adicional.</p>
+        </div>
+
+        <div class="card yellow">
+          <h3>Riesgo bajo</h3>
+          <div class="number">53</div>
+          <p>Solicitudes con perfil favorable.</p>
+        </div>
+      </section>
+
+      <section class="grid">
+
+        <div class="panel">
+          <h2 class="section-title">Gráfico de morosidad mensual</h2>
+
+          <div class="chart-box">
+            <div class="bar red" style="height: 180px;"><small>12%</small><span>Ene</span></div>
+            <div class="bar orange" style="height: 165px;"><small>11%</small><span>Feb</span></div>
+            <div class="bar red" style="height: 170px;"><small>11.3%</small><span>Mar</span></div>
+            <div class="bar orange" style="height: 150px;"><small>10%</small><span>Abr</span></div>
+            <div class="bar" style="height: 138px;"><small>9.2%</small><span>May</span></div>
+            <div class="bar" style="height: 120px;"><small>8%</small><span>Jun</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="section-title">Reportes disponibles</h2>
+
+          <div class="report-list">
+            <div class="report-item">
+              <strong>Reporte de evaluaciones</strong>
+              <p>Detalle de solicitudes evaluadas por periodo.</p>
+            </div>
+
+            <div class="report-item">
+              <strong>Reporte de riesgo</strong>
+              <p>Clasificación de clientes por riesgo bajo, medio y alto.</p>
+            </div>
+
+            <div class="report-item">
+              <strong>Reporte de morosidad</strong>
+              <p>Análisis mensual de comportamiento crediticio.</p>
+            </div>
+
+            <div class="report-item">
+              <strong>Reporte gerencial</strong>
+              <p>Resumen ejecutivo para toma de decisiones.</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Resumen de reportes generados</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Reporte</th>
+              <th>Periodo</th>
+              <th>Solicitudes</th>
+              <th>Riesgo predominante</th>
+              <th>Formato</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Evaluaciones crediticias</td>
+              <td>Enero - Marzo 2026</td>
+              <td>87</td>
+              <td><span class="badge medio">Medio</span></td>
+              <td>PDF / Excel</td>
+            </tr>
+
+            <tr>
+              <td>Indicadores de morosidad</td>
+              <td>Abril - Junio 2026</td>
+              <td>128</td>
+              <td><span class="badge bajo">Bajo</span></td>
+              <td>PDF / Excel</td>
+            </tr>
+
+            <tr>
+              <td>Clientes con riesgo alto</td>
+              <td>Junio 2026</td>
+              <td>24</td>
+              <td><span class="badge alto">Alto</span></td>
+              <td>PDF / Excel</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

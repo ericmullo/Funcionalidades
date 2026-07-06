@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Principal</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5e9;
+      min-height: 100vh;
+      color: #123;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 270px;
+      background: linear-gradient(180deg, #004b24, #009144);
+      color: white;
+      padding: 25px 20px;
+    }
+
+    .logo-box {
+      width: 190px;
+      height: 70px;
+      border: 2px dashed white;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 35px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .menu-title {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .menu-item {
+      padding: 14px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .menu-item.active,
+    .menu-item:hover {
+      background: rgba(255,255,255,0.18);
+      border-left: 5px solid #ffc400;
+    }
+
+    .content {
+      flex: 1;
+      padding: 25px 35px;
+    }
+
+    .topbar {
+      height: 75px;
+      background: white;
+      border-bottom: 5px solid #ffc400;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+      padding: 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      color: #006b35;
+      font-size: 28px;
+    }
+
+    .user {
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      border-left: 7px solid #00a84f;
+    }
+
+    .card.yellow {
+      border-left-color: #ffc400;
+    }
+
+    .card.red {
+      border-left-color: #d93025;
+    }
+
+    .card.orange {
+      border-left-color: #ff9800;
+    }
+
+    .card.gray {
+      border-left-color: #777;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .card .number {
+      font-size: 34px;
+      font-weight: bold;
+      color: #006b35;
+    }
+
+    .card.gray .number {
+      font-size: 30px;
+    }
+
+    .card p {
+      margin-top: 8px;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .panel h2 {
+      color: #006b35;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .bar-chart {
+      display: flex;
+      align-items: end;
+      gap: 25px;
+      height: 260px;
+      border-left: 2px solid #ddd;
+      border-bottom: 2px solid #ddd;
+      padding: 20px;
+    }
+
+    .bar {
+      width: 70px;
+      background: linear-gradient(180deg, #00a84f, #006b35);
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+
+    .bar span {
+      position: absolute;
+      bottom: -30px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .bar small {
+      position: absolute;
+      top: -25px;
+      width: 100%;
+      text-align: center;
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .risk-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .risk-item {
+      padding: 18px;
+      border-radius: 14px;
+      background: #f7f7ef;
+      border-left: 6px solid #00a84f;
+    }
+
+    .risk-item.high {
+      border-left-color: #d93025;
+    }
+
+    .risk-item.medium {
+      border-left-color: #ff9800;
+    }
+
+    .risk-item.low {
+      border-left-color: #00a84f;
+    }
+
+    .risk-item strong {
+      display: block;
+      color: #006b35;
+      margin-bottom: 5px;
+    }
+
+    .footer-panel {
+      margin-top: 25px;
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+      color: #006b35;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .badge.alto {
+      background: #ffe1df;
+      color: #d93025;
+    }
+
+    .badge.medio {
+      background: #fff0d6;
+      color: #ff9800;
+    }
+
+    .badge.bajo {
+      background: #dff7e8;
+      color: #00783f;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="top-logo">
+  <img src="coop.png" alt="Logo Coop" style="max-width:100%; max-height:100%;">
+</div>
+
+      <div class="menu-title">MENÚ PRINCIPAL</div>
+
+      <div class="menu-item active">📊 Dashboard</div>
+      <div class="menu-item">👥 Clientes</div>
+      <div class="menu-item">📝 Solicitudes</div>
+      <div class="menu-item">📁 Documentos</div>
+      <div class="menu-item">⚖ Evaluación de riesgo</div>
+      <div class="menu-item">📄 Reportes</div>
+      <div class="menu-item">⚙ Administración</div>
+      <div class="menu-item">🚪 Cerrar sesión</div>
+    </aside>
+
+    <main class="content">
+
+      <div class="topbar">
+        <h1>Dashboard Principal</h1>
+        <div class="user">👤 Analista de Crédito</div>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Total solicitudes</h3>
+          <div class="number">128</div>
+          <p>Solicitudes registradas</p>
+        </div>
+
+        <div class="card red">
+          <h3>Riesgo alto</h3>
+          <div class="number">24</div>
+          <p>Clientes con alto riesgo</p>
+        </div>
+
+        <div class="card orange">
+          <h3>Riesgo medio</h3>
+          <div class="number">51</div>
+          <p>Clientes en revisión</p>
+        </div>
+
+        <div class="card yellow">
+          <h3>Riesgo bajo</h3>
+          <div class="number">53</div>
+          <p>Clientes viables</p>
+        </div>
+
+        <div class="card gray">
+          <h3>Aprobadas / Rechazadas</h3>
+          <div class="number">76 / 28</div>
+          <p>Resultado de solicitudes</p>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+
+        <div class="panel">
+          <h2>Solicitudes por mes</h2>
+
+          <div class="bar-chart">
+            <div class="bar" style="height: 120px;"><small>34</small><span>Ene</span></div>
+            <div class="bar" style="height: 170px;"><small>48</small><span>Feb</span></div>
+            <div class="bar" style="height: 210px;"><small>61</small><span>Mar</span></div>
+            <div class="bar" style="height: 150px;"><small>42</small><span>Abr</span></div>
+            <div class="bar" style="height: 230px;"><small>70</small><span>May</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Resumen de riesgo</h2>
+
+          <div class="risk-list">
+            <div class="risk-item high">
+              <strong>Riesgo alto</strong>
+              Requiere revisión detallada del analista.
+            </div>
+
+            <div class="risk-item medium">
+              <strong>Riesgo medio</strong>
+              Solicitudes con condiciones por validar.
+            </div>
+
+            <div class="risk-item low">
+              <strong>Riesgo bajo</strong>
+              Solicitudes con perfil favorable.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="footer-panel">
+        <h2>Últimas solicitudes evaluadas</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Tipo de crédito</th>
+              <th>Score</th>
+              <th>Riesgo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Juan Pérez</td>
+              <td>Microcrédito</td>
+              <td>780</td>
+              <td><span class="badge bajo">Bajo</span></td>
+              <td>Aprobación sugerida</td>
+            </tr>
+
+            <tr>
+              <td>María López</td>
+              <td>Consumo</td>
+              <td>620</td>
+              <td><span class="badge medio">Medio</span></td>
+              <td>En revisión</td>
+            </tr>
+
+            <tr>
+              <td>Carlos Zambrano</td>
+              <td>Comercial</td>
+              <td>480</td>
+              <td><span class="badge alto">Alto</span></td>
+              <td>Revisión crítica</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Solicitud de Crédito</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5e9;
+      min-height: 100vh;
+      color: #123;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 270px;
+      background: linear-gradient(180deg, #004b24, #009144);
+      color: white;
+      padding: 25px 20px;
+    }
+
+    .logo-box {
+      width: 190px;
+      height: 70px;
+      border: 2px dashed white;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 35px;
+      font-weight: bold;
+    }
+
+    .menu-title {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .menu-item {
+      padding: 14px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .menu-item.active,
+    .menu-item:hover {
+      background: rgba(255,255,255,0.18);
+      border-left: 5px solid #ffc400;
+    }
+
+    .content {
+      flex: 1;
+      padding: 25px 35px;
+    }
+
+    .topbar {
+      height: 75px;
+      background: white;
+      border-bottom: 5px solid #ffc400;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+      padding: 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      color: #006b35;
+      font-size: 28px;
+    }
+
+    .user {
+      color: #006b35;
+      font-weight: bold;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      color: #006b35;
+      font-size: 22px;
+      margin-bottom: 18px;
+      border-left: 6px solid #ffc400;
+      padding-left: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #006b35;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+
+    .form-group input,
+    .form-group select {
+      height: 46px;
+    }
+
+    .form-group textarea {
+      height: 95px;
+      resize: none;
+    }
+
+    .full {
+      grid-column: span 3;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      border-left: 7px solid #00a84f;
+    }
+
+    .summary-card.yellow {
+      border-left-color: #ffc400;
+    }
+
+    .summary-card.orange {
+      border-left-color: #ff9800;
+    }
+
+    .summary-card h3 {
+      color: #555;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .summary-card strong {
+      font-size: 28px;
+      color: #006b35;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-save {
+      background: #00a84f;
+      color: white;
+    }
+
+    .btn-clean {
+      background: #ffc400;
+      color: #004b24;
+    }
+
+    .btn-cancel {
+      background: #e5e5e5;
+      color: #333;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="top-logo">
+  <img src="coop.png" alt="Logo Coop" style="max-width:100%; max-height:100%;">
+</div>
+
+      <div class="menu-title">MENÚ PRINCIPAL</div>
+
+      <div class="menu-item">📊 Dashboard</div>
+      <div class="menu-item">👥 Clientes</div>
+      <div class="menu-item active">📝 Solicitudes</div>
+      <div class="menu-item">📁 Documentos</div>
+      <div class="menu-item">⚖ Evaluación de riesgo</div>
+      <div class="menu-item">📄 Reportes</div>
+      <div class="menu-item">⚙ Administración</div>
+      <div class="menu-item">🚪 Cerrar sesión</div>
+    </aside>
+
+    <main class="content">
+
+      <div class="topbar">
+        <h1>Registro de Solicitud de Crédito</h1>
+        <div class="user">👤 Analista de Crédito</div>
+      </div>
+
+      <section class="summary">
+        <div class="summary-card">
+          <h3>Nueva solicitud</h3>
+          <strong>En registro</strong>
+        </div>
+
+        <div class="summary-card yellow">
+          <h3>Estado inicial</h3>
+          <strong>Pendiente</strong>
+        </div>
+
+        <div class="summary-card orange">
+          <h3>Validación</h3>
+          <strong>Requerida</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Datos personales</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Cédula</label>
+            <input type="text" placeholder="Ej. 1300000000">
+          </div>
+
+          <div class="form-group">
+            <label>Nombres completos</label>
+            <input type="text" placeholder="Nombre del solicitante">
+          </div>
+
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" placeholder="0999999999">
+          </div>
+
+          <div class="form-group">
+            <label>Estado civil</label>
+            <select>
+              <option>Soltero/a</option>
+              <option>Casado/a</option>
+              <option>Unión libre</option>
+              <option>Divorciado/a</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Ocupación</label>
+            <input type="text" placeholder="Ej. Comerciante">
+          </div>
+
+          <div class="form-group full">
+            <label>Dirección domiciliaria</label>
+            <input type="text" placeholder="Ingrese la dirección del cliente">
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Información financiera</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Ingresos mensuales</label>
+            <input type="number" placeholder="Ej. 850.00">
+          </div>
+
+          <div class="form-group">
+            <label>Egresos mensuales</label>
+            <input type="number" placeholder="Ej. 420.00">
+          </div>
+
+          <div class="form-group">
+            <label>Nivel de endeudamiento</label>
+            <input type="number" placeholder="Ej. 30%">
+          </div>
+
+          <div class="form-group">
+            <label>Empresa / Actividad</label>
+            <input type="text" placeholder="Lugar de trabajo o actividad">
+          </div>
+
+          <div class="form-group">
+            <label>Antigüedad laboral</label>
+            <input type="text" placeholder="Ej. 2 años">
+          </div>
+
+          <div class="form-group">
+            <label>Capacidad de pago estimada</label>
+            <input type="number" placeholder="Ej. 250.00">
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Información del crédito</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de crédito</label>
+            <select>
+              <option>Consumo</option>
+              <option>Microcrédito</option>
+              <option>Vivienda</option>
+              <option>Comercial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Monto solicitado</label>
+            <input type="number" placeholder="Ej. 5000.00">
+          </div>
+
+          <div class="form-group">
+            <label>Plazo</label>
+            <select>
+              <option>6 meses</option>
+              <option>12 meses</option>
+              <option>24 meses</option>
+              <option>36 meses</option>
+              <option>48 meses</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Estado de la solicitud</label>
+            <select>
+              <option>Pendiente</option>
+              <option>En evaluación</option>
+              <option>Aprobado</option>
+              <option>Rechazado</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label>Destino del crédito</label>
+            <textarea placeholder="Describa para qué será utilizado el crédito solicitado..."></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-cancel">Cancelar</button>
+          <button class="btn btn-clean">Limpiar</button>
+          <button class="btn btn-save">💾 Guardar solicitud</button>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
